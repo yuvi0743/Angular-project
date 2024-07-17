@@ -1,0 +1,12 @@
+<form (ngSubmit)="addWorkout()">
+  <input type="text" [(ngModel)] = "userName" name="userName" placeholder="User Name" required>
+  
+  <select [(ngModel)] = "workoutType" name="workoutType" required>
+    <option value="" disabled selected>Select Workout Type</option>
+    <option *ngFor="let type of workoutTypes" [value]="type">{{ type }}</option>
+  </select>
+  
+  <input type="number" [(ngModel)] = "workoutMinutes" name="workoutMinutes" placeholder="Workout Minutes" required>
+  
+  <button type="submit">Add Workout</button>
+</form>
