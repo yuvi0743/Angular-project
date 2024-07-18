@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { WorkoutService } from '../workout.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { FormBuilder, FormsModule, ReactiveFormsModule,Validators  } from '@angular/forms';
+import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-add-workout',
   standalone:true,
-  imports:[CommonModule,ReactiveFormsModule,FormsModule],
+  imports:[CommonModule,ReactiveFormsModule,FormsModule,RouterOutlet],
   templateUrl: './add-workout.component.html',
   styleUrls: ['./add-workout.component.css']
 })
@@ -16,8 +16,15 @@ export class AddWorkoutComponent {
   workoutMinutes: number | null = null;
 
   workoutTypes: string[] = ['Running', 'Cycling', 'Swimming', 'Yoga'];
+  workoutForm: any;
 
-  constructor(private workoutService: WorkoutService) {}
+  constructor(public workoutService: WorkoutService,  private fb: FormBuilder) {
+     this.workoutForm = this.fb.group({
+      userName: ['', Validators.required],
+      workoutMinutes: [null, Validators.required],
+      workoutType: [''], // Optional workout type
+    });
+  }
 
   addWorkout() {
     if (this.userName && this.workoutType && this.workoutMinutes !== null) {

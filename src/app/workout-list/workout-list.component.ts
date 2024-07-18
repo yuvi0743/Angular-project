@@ -3,11 +3,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { WorkoutService } from '../workout.service';
 import { CommonModule, NgFor } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination'; // Import the module
+import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-workout-list',
   templateUrl: './workout-list.component.html',
   standalone:true,
-  imports:[ReactiveFormsModule,NgFor,CommonModule,NgxPaginationModule],
+  imports:[ReactiveFormsModule,NgFor,CommonModule,NgxPaginationModule,RouterOutlet],
   styleUrls: ['./workout-list.component.css']
 })
 export class WorkoutListComponent implements OnInit {
