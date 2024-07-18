@@ -13,6 +13,15 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "codeCoverage": true ,
+            "codeCoverageExclude": [
+              "**/node_modules/**",
+              "**/src/test/**",
+              "**/*.spec.ts"
+            ],
+            "reporters": [
+              "coverage-istanbul"
+            ],
             "outputPath": "dist/health-challenge-tracker",
             "index": "src/index.html",
             "browser": "src/main.ts",
