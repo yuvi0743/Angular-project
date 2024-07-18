@@ -10,7 +10,7 @@ import { AddWorkoutComponent } from './add-workout.component';
 import { WorkoutService } from '../workout.service';
 import { FormBuilder } from '@angular/forms';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
-
+import { fakeAsync, tick } from '@angular/core/testing';
 @Injectable()
 class MockWorkoutService {}
 
@@ -66,24 +66,24 @@ describe('AddWorkoutComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #addWorkout()', async () => {
+  it('should run #addWorkout()', fakeAsync(() => {
     // Mock workoutService
     const mockWorkoutService = {
-        addWorkout: () => Promise.resolve() // Mock an asynchronous response if necessary
+        addWorkout: jasmine.createSpy('addWorkout').and.returnValue(Promise.resolve())
     };
+    
     // Assign mock service to component
     component.workoutService = mockWorkoutService as any;
 
-    // Spy on addWorkout method
-    const addWorkoutSpy = spyOn(component.workoutService, 'addWorkout').and.callThrough();
-
     // Call addWorkout method
-    await component.addWorkout();
+    component.addWorkout();
+    
+    // Simulate the passage of time until all pending asynchronous activities complete
+    tick();
 
     // Expect addWorkout method to have been called
-    expect(addWorkoutSpy).toHaveBeenCalled();
-});
-
+    expect(mockWorkoutService.addWorkout).toHaveBeenCalled();
+}));
 
 
 });

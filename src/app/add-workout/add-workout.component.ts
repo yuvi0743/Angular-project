@@ -27,6 +27,7 @@ export class AddWorkoutComponent {
   }
 
   addWorkout() {
+    
     if (this.userName && this.workoutType && this.workoutMinutes !== null) {
       const newWorkout = {
         id: Date.now(),  // Using timestamp as a unique ID for simplicity

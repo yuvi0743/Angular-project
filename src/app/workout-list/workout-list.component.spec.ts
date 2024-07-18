@@ -37,8 +37,18 @@ class SafeHtmlPipe implements PipeTransform {
 describe('WorkoutListComponent', () => {
   let fixture;
   let component;
+  let mockWorkoutService: any;
+
 
   beforeEach(() => {
+    mockWorkoutService = {
+      getWorkouts: jasmine.createSpy('getWorkouts').and.returnValue([
+        { name: 'Running', workouts: [{ type: 'Running' }] },
+        { name: 'Cycling', workouts: [{ type: 'Cycling' }] },
+        { name: 'Swimming', workouts: [{ type: 'Swimming' }] },
+        { name: 'Yoga', workouts: [{ type: 'Yoga' }] }
+      ])
+    };
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule,WorkoutListComponent ],
       declarations: [
@@ -65,7 +75,50 @@ describe('WorkoutListComponent', () => {
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
-
+  it('should filter workouts by searchName', () => {
+    component.workouts = mockWorkoutService.getWorkouts();
+    component.workoutForm.get('searchName')?.setValue('Run');
+  
+    component.filterWorkouts();
+  
+    expect(component.filteredWorkouts.length).toBe(1);
+    expect(component.filteredWorkouts[0].name).toBe('Running');
+  });
+  it('should filter workouts by searchName with no matches', () => {
+    component.workouts = mockWorkoutService.getWorkouts();
+    component.workoutForm.get('searchName')?.setValue('NonExistent');
+  
+    component.filterWorkouts();
+  
+    expect(component.filteredWorkouts.length).toBe(0);
+  });
+  it('should filter workouts with no searchName', () => {
+    component.workouts = mockWorkoutService.getWorkouts();
+    component.workoutForm.get('searchName')?.setValue('');
+  
+    component.filterWorkouts();
+  
+    expect(component.filteredWorkouts.length).toBe(4);
+  });
+      
+  it('should filter workouts with selectedWorkoutType as All', () => {
+    component.workouts = mockWorkoutService.getWorkouts();
+    component.workoutForm.get('selectedWorkoutType')?.setValue('All');
+  
+    component.filterWorkouts();
+  
+    expect(component.filteredWorkouts.length).toBe(4);
+  });
+  it('should filter workouts by selectedWorkoutType', () => {
+    component.workouts = mockWorkoutService.getWorkouts();
+    component.workoutForm.get('selectedWorkoutType')?.setValue('Cycling');
+  
+    component.filterWorkouts();
+  
+    expect(component.filteredWorkouts.length).toBe(1);
+    expect(component.filteredWorkouts[0].name).toBe('Cycling');
+  });
+    
   it('should run GetterDeclaration #pagedWorkouts', async () => {
     component.filteredWorkouts = component.filteredWorkouts || {};
     component.filteredWorkouts = ['filteredWorkouts'];
@@ -121,25 +174,35 @@ it('should run #loadWorkouts()', () => {
 
   // Call loadWorkouts
   component.loadWorkouts();
-
   // Expect getWorkouts and filterWorkouts to have been called
   expect(component.workoutService.getWorkouts).toHaveBeenCalled();
   expect(component.filterWorkouts).toHaveBeenCalled();
 });
+it('should calculate totalPages correctly', () => {
+  // Mock data
+  component.filteredWorkouts = [1, 2, 3, 4, 5, 6]; // Mocking filtered workouts
+  component.itemsPerPage = 2;
+  
+  // Call totalPages property
+  const totalPages = component.totalPages;
 
-  it('should run #undefined()', async () => {
-    // Error: ERROR this JS code is invalid, "workout.workouts.some((w)"
-    //     at Util.getFuncReturn (/var/task/lib/util.js:325:13)
-    //     at /var/task/lib/util.js:413:30
-    //     at Array.forEach (<anonymous>)
-    //     at Util.getFuncParamObj (/var/task/lib/util.js:396:26)
-    //     at Util.getFuncArguments (/var/task/lib/util.js:347:30)
-    //     at Util.getFuncReturn (/var/task/lib/util.js:332:34)
-    //     at FuncTestGen.setMockData (/var/task/lib/func-test-gen.js:159:31)
-    //     at FuncTestGen.setMockData (/var/task/lib/func-test-gen.js:154:14)
-    //     at FuncTestGen.setMockData (/var/task/lib/func-test-gen.js:90:12)
-    //     at /var/task/lib/func-test-gen.js:80:14
-  });
+  // Expect totalPages to be calculated correctly
+  expect(totalPages).toEqual(3); // 6 items / 2 itemsPerPage = 3 pages
+});
+
+it('should handle edge case when filteredWorkouts is empty', () => {
+  // Mock data
+  component.filteredWorkouts = []; // No workouts
+  component.itemsPerPage = 10;
+
+  // Call totalPages property
+  const totalPages = component.totalPages;
+
+  // Expect totalPages to be 0 when there are no workouts
+  expect(totalPages).toEqual(0);
+});
+
+  
 
   it('should run #onPageChange()', async () => {
 

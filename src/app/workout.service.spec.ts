@@ -21,27 +21,26 @@ describe('WorkoutService', () => {
   });
 
   it('should run #getHighestId()', async () => {
-
+    
     service.getHighestId();
 
   });
 
-  it('should run #setHighestId()', async () => {
-
+  it('should run #setHighestId()', () => {
+    // Spy on setHighestId method
     service.setHighestId({
-      toString: function() {}
+        toString: function() {}
     });
 
-  });
+});
+
 
   it('should run #initializeLocalStorage()', () => {
     // Spy on isLocalStorageAvailable and setHighestId methods
     spyOn(service, 'isLocalStorageAvailable');
-    spyOn(service, 'setHighestId');
 
     // Call initializeLocalStorage
     service.initializeLocalStorage();
-
     // Expect isLocalStorageAvailable and setHighestId to have been called
     expect(service.isLocalStorageAvailable).toHaveBeenCalled();
 });
