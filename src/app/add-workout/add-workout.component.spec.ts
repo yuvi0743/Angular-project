@@ -39,7 +39,6 @@ describe('AddWorkoutComponent', () => {
   let component;
 
   beforeEach(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ,AddWorkoutComponent],
       declarations: [
@@ -68,10 +67,21 @@ describe('AddWorkoutComponent', () => {
   });
 
   it('should run #addWorkout()', async () => {
-    component.workoutService = component.workoutService || {};
-    component.workoutService.addWorkout = jest.fn();
+    // Mock workoutService
+    const mockWorkoutService = {
+        addWorkout: () => {}
+    };
+    // Assign mock service to component
+    component.workoutService = mockWorkoutService as any;
+
+    // Spy on addWorkout method
+    const addWorkoutSpy = spyOn(component.workoutService, 'addWorkout').and.callThrough();
+
+    // Call addWorkout method
     component.addWorkout();
-    //expect(component.workoutService.addWorkout).toHaveBeenCalled();
-  });
+
+    // Expect addWorkout method to have been called
+    expect(addWorkoutSpy).toHaveBeenCalled();
+});
 
 });

@@ -10,7 +10,6 @@ import { Component } from '@angular/core';
 import { WorkoutListComponent } from './workout-list.component';
 import { WorkoutService } from '../workout.service';
 import { FormBuilder } from '@angular/forms';
-import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 
 @Injectable()
 class MockWorkoutService {}
@@ -40,11 +39,9 @@ describe('WorkoutListComponent', () => {
   let component;
 
   beforeEach(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule,WorkoutListComponent ],
       declarations: [
-        WorkoutListComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],

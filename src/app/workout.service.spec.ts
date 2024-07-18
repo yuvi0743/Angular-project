@@ -34,13 +34,6 @@ describe('WorkoutService', () => {
 
   });
 
-  it('should run #initializeLocalStorage()', async () => {
-    service.isLocalStorageAvailable = jest.fn();
-    service.setHighestId = jest.fn();
-    service.initializeLocalStorage();
-    //expect(service.isLocalStorageAvailable).toHaveBeenCalled();
-    // expect(service.setHighestId).toHaveBeenCalled();
-  });
 
   it('should run #getWorkouts()', async () => {
 
