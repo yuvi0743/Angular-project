@@ -1,12 +1,55 @@
-<form (ngSubmit)="addWorkout()">
-  <input type="text" [(ngModel)] = "userName" name="userName" placeholder="User Name" required>
-  
-  <select [(ngModel)] = "workoutType" name="workoutType" required>
-    <option value="" disabled selected>Select Workout Type</option>
-    <option *ngFor="let type of workoutTypes" [value]="type">{{ type }}</option>
-  </select>
-  
-  <input type="number" [(ngModel)] = "workoutMinutes" name="workoutMinutes" placeholder="Workout Minutes" required>
-  
-  <button type="submit">Add Workout</button>
+<form (ngSubmit)="addWorkout()" class="max-w-lg mx-auto p-8 bg-white rounded-lg shadow-md space-y-6">
+  <h2 class="text-2xl font-semibold text-gray-700 text-center">Add Workout</h2>
+
+  <div>
+    <label for="userName" class="block text-sm font-medium text-gray-700">User Name</label>
+    <input 
+      type="text" 
+      [(ngModel)]="userName" 
+      name="userName" 
+      id="userName" 
+      placeholder="User Name" 
+      required
+      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    >
+  </div>
+
+  <div>
+    <label for="workoutType" class="block text-sm font-medium text-gray-700">Workout Type</label>
+    <select 
+      [(ngModel)]="workoutType" 
+      name="workoutType" 
+      id="workoutType" 
+      required
+      class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    >
+      <option value="">Select a workout type</option>
+      <option value="Running">Running</option>
+      <option value="Cycling">Cycling</option>
+      <option value="Swimming">Swimming</option>
+      <option value="Yoga">Yoga</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="workoutMinutes" class="block text-sm font-medium text-gray-700">Workout Minutes</label>
+    <input 
+      type="number" 
+      [(ngModel)]="workoutMinutes" 
+      name="workoutMinutes" 
+      id="workoutMinutes" 
+      placeholder="Workout Minutes" 
+      required
+      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    >
+  </div>
+
+  <div class="text-center">
+    <button 
+      type="submit" 
+      class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    >
+      Add Workout
+    </button>
+  </div>
 </form>

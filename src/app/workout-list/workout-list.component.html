@@ -1,76 +1,77 @@
 <div class="container mx-auto mt-4">
-    <h2 class="text-2xl font-bold mb-4">Workout List</h2>
-  
-    <form [formGroup]="workoutForm" class="mb-4">
-      <input
-        type="text"
-        placeholder="Search by name"
-        class="border p-2"
-        formControlName="searchName"
-      />
-      <select
-        class="border p-2 ml-2"
-        formControlName="selectedWorkoutType"
-      >
-        <option *ngFor="let type of workoutTypes" [value]="type">{{ type }}</option>
-      </select>
-    </form>
-  
-    <div *ngIf="filteredWorkouts.length === 0" class="text-center text-gray-500">
-      No workouts available.
-    </div>
-  
-    <div *ngIf="filteredWorkouts.length > 0">
-      <table class="min-w-full bg-white">
-        <thead>
-          <tr>
-            <th class="py-2">Name</th>
-            <th class="py-2">Workouts</th>
-            <th class="py-2">Number of Workouts</th>
-            <th class="py-2">Total Workout Minutes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let user of filteredWorkouts">
-            <td class="border px-4 py-2">{{ user.name }}</td>
-            <td class="border px-4 py-2">
-              {{ getWorkoutTypes(user) }}
-            </td>
-            <td class="border px-4 py-2">{{ user.workouts.length }}</td>
-            <td class="border px-4 py-2">
-              {{ getTotalWorkoutMinutes(user) }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-  
-      <div class="mt-4 flex justify-between items-center">
-        <div>
-          Items per page:
-          <select formControlName="workoutForm.get('itemsPerPage')">
-            <option [value]="5">5</option>
-            <option [value]="10">10</option>
-            <option [value]="15">15</option>
-          </select>
-        </div>
-        <div>
-          <button
-            class="px-4 py-2 border"
-            [disabled]="currentPage === 1"
-            (click)="onPageChange(currentPage - 1)"
-          >
-            Previous
-          </button>
-          <span class="mx-2">Page {{ currentPage }}</span>
-          <button
-            class="px-4 py-2 border"
-            [disabled]="currentPage * itemsPerPage >= workouts.length"
-            (click)="onPageChange(currentPage + 1)"
-          >
-            Next
-          </button>
-        </div>
+  <h2 class="workout-list-heading">Workout List</h2>
+
+  <form [formGroup]="workoutForm" class="workout-form">
+    <input
+      type="text"
+      placeholder="Search by name"
+      class="search-input"
+      formControlName="searchName"
+    />
+    <select
+      class="select-input"
+      formControlName="selectedWorkoutType"
+    >
+      <option value="" disabled selected>Select Workout Type</option>
+      <option *ngFor="let type of workoutTypes" [value]="type">{{ type }}</option>
+    </select>
+  </form>
+
+  <div *ngIf="filteredWorkouts.length === 0" class="no-workouts">
+    No workouts available.
+  </div>
+
+  <div *ngIf="filteredWorkouts.length > 0">
+    <table class="workout-table">
+      <thead class="table-header">
+        <tr>
+          <th class="table-cell">Name</th>
+          <th class="table-cell">Workouts</th>
+          <th class="table-cell">Number of Workouts</th>
+          <th class="table-cell">Total Workout Minutes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of pagedWorkouts" class="table-row">
+          <td class="table-cell">{{ user.name }}</td>
+          <td class="table-cell">{{ getWorkoutTypes(user) }}</td>
+          <td class="table-cell">{{ user.workouts.length }}</td>
+          <td class="table-cell">{{ getTotalWorkoutMinutes(user) }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination-controls">
+      <div class="items-per-page">
+        <label for="itemsPerPage" class="items-per-page-label">Items per page:</label>
+        <select
+          id="itemsPerPage"
+          class="items-per-page-select"
+          formControlName="itemsPerPage"
+          (change)="onItemsPerPageChange($event)"
+        >
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="15">15</option>
+        </select>
+      </div>
+      <div class="page-navigation">
+        <button
+          class="page-button"
+          [disabled]="isFirstPage"
+          (click)="onPageChange(currentPage - 1)"
+        >
+          Previous
+        </button>
+        <span class="page-info">Page {{ currentPage }}</span>
+        <button
+          class="page-button"
+          [disabled]="isLastPage"
+          (click)="onPageChange(currentPage + 1)"
+        >
+          Next
+        </button>
       </div>
     </div>
   </div>
-  
+</div>

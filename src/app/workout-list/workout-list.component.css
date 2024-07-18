@@ -1,0 +1,70 @@
+/* Tailwind CSS classes for workout list component */
+
+.container {
+    @apply mx-auto mt-4;
+  }
+  
+  .workout-list-heading {
+    @apply text-3xl font-bold mb-6 text-center;
+  }
+  
+  .workout-form {
+    @apply flex justify-center mb-6 space-x-4;
+  }
+  
+  .search-input {
+    @apply border border-gray-300 rounded-lg p-2 shadow-sm w-1/3;
+  }
+  
+  .select-input {
+    @apply border border-gray-300 rounded-lg p-2 shadow-sm w-1/4;
+  }
+  
+  .no-workouts {
+    @apply text-center text-gray-500;
+  }
+  
+  .workout-table {
+    @apply min-w-full bg-white border rounded-lg overflow-hidden shadow-lg;
+  }
+  
+  .table-header {
+    @apply bg-gray-200;
+  }
+  
+  .table-cell {
+    @apply py-3 px-4 text-left;
+  }
+  
+  .table-row {
+    @apply border-b hover:bg-gray-100;
+  }
+  
+  .pagination-controls {
+    @apply mt-6 flex justify-between items-center;
+  }
+  
+  .items-per-page {
+    @apply flex items-center;
+  }
+  
+  .items-per-page-label {
+    @apply mr-2;
+  }
+  
+  .items-per-page-select {
+    @apply border border-gray-300 rounded-lg p-2 shadow-sm;
+  }
+  
+  .page-navigation {
+    @apply flex items-center;
+  }
+  
+  .page-button {
+    @apply px-4 py-2 border border-gray-300 rounded-lg shadow-sm disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .page-info {
+    @apply mx-2;
+  }
+  
