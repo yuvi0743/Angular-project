@@ -42,7 +42,7 @@
     </table>
 
     <div class="pagination-controls">
-      <div class="items-per-page">
+      <div class="items-per-page" [formGroup]= "workoutForm">
         <label for="itemsPerPage" class="items-per-page-label">Items per page:</label>
         <select
           id="itemsPerPage"

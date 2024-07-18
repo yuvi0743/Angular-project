@@ -9,7 +9,9 @@ export class WorkoutService {
   workoutsKey = 'workouts';
   highestIdKey = 'highestId';
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.initializeLocalStorage();
+  }
 
   isLocalStorageAvailable(): boolean {
     return isPlatformBrowser(this.platformId) && !!localStorage;
@@ -30,6 +32,7 @@ export class WorkoutService {
           { id: 2, name: 'Jane Smith', workouts: [{ type: 'Swimming', minutes: 60 }, { type: 'Running', minutes: 20 }] },
           { id: 3, name: 'Mike Johnson', workouts: [{ type: 'Yoga', minutes: 50 }, { type: 'Cycling', minutes: 40 }] }
         ]));
+        this.setHighestId(3);
       }
     } else {
       console.error('localStorage is not available or accessible.');
