@@ -32,7 +32,7 @@
   "./node_modules/tailwindcss/components.css",
   "./node_modules/tailwindcss/utilities.css"
 ],
-            "scripts": ["Chart.js"],
+            "scripts": [],
             "server": "src/main.server.ts",
             "prerender": true,
             "ssr": {
