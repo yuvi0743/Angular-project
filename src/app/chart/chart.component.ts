@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   standalone:true,
   imports:[NgxChartsModule,CommonModule],
   templateUrl: './chart.component.html',
-  styleUrls: ['./chart.component.scss']
+  styleUrls: ['./chart.component.css']
 })
 export class ChartComponent implements OnInit {
   users: any[] = [];

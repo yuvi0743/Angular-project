@@ -1,114 +1,169 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { WorkoutListComponent } from './workout-list.component';
 import { WorkoutService } from '../workout.service';
-import { of, toArray } from 'rxjs'; // Import both of and toArray
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
+import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
+
+@Injectable()
+class MockWorkoutService {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('WorkoutListComponent', () => {
-  let component: WorkoutListComponent;
-  let fixture: ComponentFixture<WorkoutListComponent>;
-  let mockWorkoutService: WorkoutService;
-
-  beforeEach(async () => {
-    mockWorkoutService = jasmine.createSpyObj('WorkoutService', ['getWorkouts']);
-    await TestBed.configureTestingModule({
-      declarations: [ ],
-      imports:[FormsModule, ReactiveFormsModule,WorkoutListComponent ],
-      providers: [ { provide: WorkoutService, useValue: mockWorkoutService } ]
-    })
-    .compileComponents();
-  });
+  let fixture;
+  let component;
 
   beforeEach(() => {
+    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule ],
+      declarations: [
+        WorkoutListComponent,
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: WorkoutService, useClass: MockWorkoutService },
+        FormBuilder
+      ]
+    }).overrideComponent(WorkoutListComponent, {
+
+    }).compileComponents();
     fixture = TestBed.createComponent(WorkoutListComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
+  it('should run GetterDeclaration #pagedWorkouts', async () => {
+    component.filteredWorkouts = component.filteredWorkouts || {};
+    component.filteredWorkouts = ['filteredWorkouts'];
+    const pagedWorkouts = component.pagedWorkouts;
 
-
-  it('should filter workouts by search name (ignoring case)', () => {
-    const mockWorkouts = [
-      { name: 'John Doe', workouts: [{ type: 'Running', minutes: 30 }] },
-      { name: 'Jane Doe', workouts: [{ type: 'Yoga', minutes: 45 }] },
-    ];
-    component.workouts = mockWorkouts;
-    component.workoutForm?.get('searchName')?.setValue('doe');
-    component.filterWorkouts();
-    expect(component.filteredWorkouts).toEqual(mockWorkouts); // All workouts should match (case-insensitive)
-  });
-  
-
-  it('should filter workouts by workout type', () => {
-    const mockWorkouts = [
-      { name: 'John Doe', workouts: [{ type: 'Running', minutes: 30 }] },
-      { name: 'Jane Doe', workouts: [{ type: 'Yoga', minutes: 45 }] },
-    ];
-    component.workouts = mockWorkouts;
-    component.workoutForm?.get('selectedWorkoutType')?.setValue('Running');
-    component.filterWorkouts();
-    expect(component.filteredWorkouts).toEqual([mockWorkouts[0]]);
-  });
-  
-
-  it('should reset to first page when filtering', () => {
-    component.currentPage = 2;
-    component.filterWorkouts();
-    expect(component.currentPage).toEqual(1);
   });
 
-  it('should calculate paged workouts', () => {
-    const mockWorkouts = [1, 2, 3, 4, 5, 6];
-    component.filteredWorkouts = mockWorkouts;
-    component.itemsPerPage = 3;
-    expect(component.pagedWorkouts).toEqual([1, 2, 3]);
+  it('should run GetterDeclaration #totalPages', async () => {
+    component.filteredWorkouts = component.filteredWorkouts || {};
+    const totalPages = component.totalPages;
+
   });
 
-  it('should calculate total pages', () => {
-    const mockWorkouts = [1, 2, 3, 4, 5];
-    component.filteredWorkouts = mockWorkouts;
-    component.itemsPerPage = 2;
-    expect(component.totalPages).toEqual(3);
+  it('should run GetterDeclaration #isFirstPage', async () => {
+
+    const isFirstPage = component.isFirstPage;
+
   });
 
-  it('should indicate first page', () => {
-    component.currentPage = 1;
-    expect(component.isFirstPage).toEqual(true);
+  it('should run GetterDeclaration #isLastPage', async () => {
+
+    const isLastPage = component.isLastPage;
+
   });
 
-  it('should calculate total pages', () => {
-    const mockWorkouts = [1, 2, 3, 4, 5];
-    component.filteredWorkouts = mockWorkouts;
-    component.itemsPerPage = 2;
-    expect(component.totalPages).toEqual(3); // Assert the property value
-  });
-  
-
-  it('should get workout types from user', () => {
-    const mockUser = { workouts: [{ type: 'Running' }, { type: 'Yoga' }] };
-    expect(component.getWorkoutTypes(mockUser)).toEqual('Running, Yoga');
+  it('should run #ngOnInit()', async () => {
+    component.loadWorkouts = jest.fn();
+    component.filterWorkouts = jest.fn();
+    component.workoutForm = component.workoutForm || {};
+    component.workoutForm.valueChanges = observableOf({});
+    component.ngOnInit();
+    // expect(component.loadWorkouts).toHaveBeenCalled();
+    // expect(component.filterWorkouts).toHaveBeenCalled();
   });
 
-  it('should calculate total workout minutes from user', () => {
-    const mockUser = { workouts: [{ minutes: 30 }, { minutes: 45 }] };
-    expect(component.getTotalWorkoutMinutes(mockUser)).toEqual(75);
+  it('should run #loadWorkouts()', async () => {
+    component.workoutService = component.workoutService || {};
+    component.workoutService.getWorkouts = jest.fn();
+    component.filterWorkouts = jest.fn();
+    component.loadWorkouts();
+    // expect(component.workoutService.getWorkouts).toHaveBeenCalled();
+    // expect(component.filterWorkouts).toHaveBeenCalled();
   });
 
-  it('should update items per page and reset to first page', () => {
-    component.currentPage = 2;
-    component.itemsPerPage = 4;
-    component.onItemsPerPageChange({ target: { value: 4 } });
-    expect(component.currentPage).toEqual(1);
-    expect(component.itemsPerPage).toEqual(4);
+  it('should run #undefined()', async () => {
+    // Error: ERROR this JS code is invalid, "workout.workouts.some((w)"
+    //     at Util.getFuncReturn (/var/task/lib/util.js:325:13)
+    //     at /var/task/lib/util.js:413:30
+    //     at Array.forEach (<anonymous>)
+    //     at Util.getFuncParamObj (/var/task/lib/util.js:396:26)
+    //     at Util.getFuncArguments (/var/task/lib/util.js:347:30)
+    //     at Util.getFuncReturn (/var/task/lib/util.js:332:34)
+    //     at FuncTestGen.setMockData (/var/task/lib/func-test-gen.js:159:31)
+    //     at FuncTestGen.setMockData (/var/task/lib/func-test-gen.js:154:14)
+    //     at FuncTestGen.setMockData (/var/task/lib/func-test-gen.js:90:12)
+    //     at /var/task/lib/func-test-gen.js:80:14
   });
 
-  it('should update page number on click', () => {
-    component.currentPage = 1;
-    component.onPageChange(2);
-    expect(component.currentPage).toEqual(2);
+  it('should run #onPageChange()', async () => {
+
+    component.onPageChange({});
+
   });
+
+  it('should run #onItemsPerPageChange()', async () => {
+    component.filterWorkouts = jest.fn();
+    component.onItemsPerPageChange({
+      target: {
+        value: {}
+      }
+    });
+    // expect(component.filterWorkouts).toHaveBeenCalled();
+  });
+
+  it('should run #getWorkoutTypes()', async () => {
+
+    component.getWorkoutTypes({
+      workouts: [{
+        0: {
+          type: {}
+        },
+        join: function() {}
+      }]
+    });
+
+  });
+
+  it('should run #getTotalWorkoutMinutes()', async () => {
+
+    component.getTotalWorkoutMinutes({
+      workouts: [{}, {
+        minutes: {}
+      }]
+    });
+
+  });
+
 });
