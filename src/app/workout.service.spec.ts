@@ -104,6 +104,54 @@ it('should update existing user workouts', () => {
     service.getWorkouts();
 
   });
+  it('should add a new workout when localStorage is empty', () => {
+    // Reset getItem mock to return null for empty localStorage
+    localStorage.getItem.and.callFake((key: string) => {
+      return null;
+    });
+
+    const newWorkout = { name: 'Alice', workouts: [{ type: 'Yoga' }] };
+
+    service.addWorkout(newWorkout);
+
+    expect(service.getWorkouts).toHaveBeenCalled();
+    expect(service.getHighestId).toHaveBeenCalled();
+    expect(service.setHighestId).toHaveBeenCalledWith(1); // ID should start from 1
+    expect(localStorage.setItem).toHaveBeenCalledWith(service.workoutsKey, JSON.stringify([
+      { id: 1, name: 'Alice', workouts: [{ type: 'Yoga' }] }
+    ]));
+  });
+  it('should run #getHighestId()', () => {
+    service.getHighestId();
+
+    expect(service.getHighestId).toHaveBeenCalled();
+  });
+
+  it('should run #getWorkouts()', () => {
+    service.getWorkouts();
+
+    expect(service.getWorkouts).toHaveBeenCalled();
+  });
+  it('should initialize localStorage with default data when empty', () => {
+    // Reset getItem mock to return null for empty localStorage
+    localStorage.getItem.and.callFake((key: string) => {
+      return null;
+    });
+  
+    // Call initializeLocalStorage
+    service.initializeLocalStorage();
+  
+    // Expect setItem to have been called with default workouts data
+    expect(localStorage.setItem).toHaveBeenCalledWith(service.workoutsKey, JSON.stringify([
+      { id: 1, name: 'John Doe', workouts: [{ type: 'Running', minutes: 30 }, { type: 'Cycling', minutes: 4 }] },
+      { id: 2, name: 'Jane Smith', workouts: [{ type: 'Swimming', minutes: 60 }, { type: 'Running', minutes: 20 }] },
+      { id: 3, name: 'Mike Johnson', workouts: [{ type: 'Yoga', minutes: 50 }, { type: 'Cycling', minutes: 40 }] }
+    ]));
+  
+    // Expect setHighestId to have been called with 3
+    expect(service.setHighestId).toHaveBeenCalledWith(3);
+  });
+  
         it('should run #undefined()', async () => {
     // Error: ERROR Util.getNode JS code is invalid, "(...undefined)"
     //     at Util.getNode (/var/task/lib/util.js:181:13)
