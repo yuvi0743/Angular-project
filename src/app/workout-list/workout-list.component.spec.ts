@@ -10,7 +10,7 @@ import { Component } from '@angular/core';
 import { WorkoutListComponent } from './workout-list.component';
 import { WorkoutService } from '../workout.service';
 import { FormBuilder } from '@angular/forms';
-
+import { of } from 'rxjs';
 @Injectable()
 class MockWorkoutService {}
 
@@ -91,24 +91,41 @@ describe('WorkoutListComponent', () => {
 
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.loadWorkouts = jest.fn();
-    component.filterWorkouts = jest.fn();
-    component.workoutForm = component.workoutForm || {};
-    component.workoutForm.valueChanges = observableOf({});
-    component.ngOnInit();
-    // expect(component.loadWorkouts).toHaveBeenCalled();
-    // expect(component.filterWorkouts).toHaveBeenCalled();
-  });
+  it('should run #ngOnInit()', () => {
+    // Mock loadWorkouts and filterWorkouts methods
+    spyOn(component, 'loadWorkouts');
+    spyOn(component, 'filterWorkouts');
 
-  it('should run #loadWorkouts()', async () => {
-    component.workoutService = component.workoutService || {};
-    component.workoutService.getWorkouts = jest.fn();
-    component.filterWorkouts = jest.fn();
-    component.loadWorkouts();
-    // expect(component.workoutService.getWorkouts).toHaveBeenCalled();
-    // expect(component.filterWorkouts).toHaveBeenCalled();
-  });
+    // Mock workoutForm and its valueChanges
+    component.workoutForm = {
+        valueChanges: of({})
+    } as any;
+
+    // Call ngOnInit
+    component.ngOnInit();
+
+    // Expect loadWorkouts and filterWorkouts to have been called
+    expect(component.loadWorkouts).toHaveBeenCalled();
+    expect(component.filterWorkouts).toHaveBeenCalled();
+});
+
+it('should run #loadWorkouts()', () => {
+  // Mock workoutService and its getWorkouts method
+  const mockWorkouts = []; // Mock data
+  const mockWorkoutService = jasmine.createSpyObj('WorkoutService', ['getWorkouts']);
+  mockWorkoutService.getWorkouts.and.returnValue(of(mockWorkouts));
+  component.workoutService = mockWorkoutService;
+
+  // Spy on filterWorkouts method
+  spyOn(component, 'filterWorkouts');
+
+  // Call loadWorkouts
+  component.loadWorkouts();
+
+  // Expect getWorkouts and filterWorkouts to have been called
+  expect(component.workoutService.getWorkouts).toHaveBeenCalled();
+  expect(component.filterWorkouts).toHaveBeenCalled();
+});
 
   it('should run #undefined()', async () => {
     // Error: ERROR this JS code is invalid, "workout.workouts.some((w)"
@@ -130,15 +147,23 @@ describe('WorkoutListComponent', () => {
 
   });
 
-  it('should run #onItemsPerPageChange()', async () => {
-    component.filterWorkouts = jest.fn();
-    component.onItemsPerPageChange({
-      target: {
-        value: {}
-      }
-    });
-    // expect(component.filterWorkouts).toHaveBeenCalled();
-  });
+  it('should run #onItemsPerPageChange()', () => {
+    // Spy on filterWorkouts method
+    spyOn(component, 'filterWorkouts');
+
+    // Simulate event with mock target value
+    const mockEvent = {
+        target: {
+            value: {}
+        }
+    };
+
+    // Call onItemsPerPageChange with mock event
+    component.onItemsPerPageChange(mockEvent);
+
+    // Expect filterWorkouts to have been called
+    expect(component.filterWorkouts).toHaveBeenCalled();
+});
 
   it('should run #getWorkoutTypes()', async () => {
 

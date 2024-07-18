@@ -69,7 +69,7 @@ describe('AddWorkoutComponent', () => {
   it('should run #addWorkout()', async () => {
     // Mock workoutService
     const mockWorkoutService = {
-        addWorkout: () => {}
+        addWorkout: () => Promise.resolve() // Mock an asynchronous response if necessary
     };
     // Assign mock service to component
     component.workoutService = mockWorkoutService as any;
@@ -78,10 +78,12 @@ describe('AddWorkoutComponent', () => {
     const addWorkoutSpy = spyOn(component.workoutService, 'addWorkout').and.callThrough();
 
     // Call addWorkout method
-    component.addWorkout();
+    await component.addWorkout();
 
     // Expect addWorkout method to have been called
     expect(addWorkoutSpy).toHaveBeenCalled();
 });
+
+
 
 });

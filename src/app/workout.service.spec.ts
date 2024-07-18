@@ -34,6 +34,18 @@ describe('WorkoutService', () => {
 
   });
 
+  it('should run #initializeLocalStorage()', () => {
+    // Spy on isLocalStorageAvailable and setHighestId methods
+    spyOn(service, 'isLocalStorageAvailable');
+    spyOn(service, 'setHighestId');
+
+    // Call initializeLocalStorage
+    service.initializeLocalStorage();
+
+    // Expect isLocalStorageAvailable and setHighestId to have been called
+    expect(service.isLocalStorageAvailable).toHaveBeenCalled();
+});
+
 
   it('should run #getWorkouts()', async () => {
 
