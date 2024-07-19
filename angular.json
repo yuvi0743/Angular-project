@@ -41,6 +41,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/yuvi0743.github.io/",
               "budgets": [
                 {
                   "type": "initial",
