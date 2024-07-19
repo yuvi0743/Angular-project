@@ -1,0 +1,7 @@
+{
+  "routes": [
+    "/add-workout",
+    "/charts",
+    "/workout-list"
+  ]
+}
